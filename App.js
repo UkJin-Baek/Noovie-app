@@ -7,9 +7,10 @@ import * as Font from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
 import { Asset } from "expo-asset";
 import { NavigationContainer } from "@react-navigation/native";
-import Tabs from "./src/navigation/Tabs";
-import Stacks from "./src/navigation/Stacks";
+import { useColorScheme } from "react-native";
 import Root from "./src/navigation/Root";
+import { ThemeProvider } from "styled-components/native";
+import { darkTheme, lightTheme } from "./src/styled";
 
 //유틸 함수로 분리하기
 const loadFonts = (fonts) => fonts.map((font) => Font.loadAsync(font));
@@ -55,6 +56,8 @@ const App = () => {
     }
   }, [ready]);
 
+  const isDark = useColorScheme() === "dark";
+
   //로딩중 보여줄 화면
   if (!ready) {
     return (
@@ -65,9 +68,11 @@ const App = () => {
   }
 
   return (
-    <NavigationContainer>
-      <Root />
-    </NavigationContainer>
+    <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+      <NavigationContainer>
+        <Root />
+      </NavigationContainer>
+    </ThemeProvider>
   );
 };
 
