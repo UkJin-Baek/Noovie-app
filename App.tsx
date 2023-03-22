@@ -11,6 +11,9 @@ import { useColorScheme } from "react-native";
 import Root from "./src/navigation/Root";
 import { ThemeProvider } from "styled-components/native";
 import { darkTheme, lightTheme } from "./src/styled";
+import { QueryClient, QueryClientProvider } from "react-query";
+
+const queryClient = new QueryClient();
 
 //유틸 함수로 분리하기
 const loadFonts = (fonts) => fonts.map((font) => Font.loadAsync(font));
@@ -50,12 +53,6 @@ const App = () => {
     prepare();
   }, []);
 
-  const onLayoutRootView = useCallback(async () => {
-    if (ready) {
-      await SplashScreen.hideAsync();
-    }
-  }, [ready]);
-
   const isDark = useColorScheme() === "dark";
 
   //로딩중 보여줄 화면
@@ -68,11 +65,13 @@ const App = () => {
   }
 
   return (
-    <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
-      <NavigationContainer>
-        <Root />
-      </NavigationContainer>
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+        <NavigationContainer>
+          <Root />
+        </NavigationContainer>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 };
 
