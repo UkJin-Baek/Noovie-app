@@ -14,9 +14,9 @@
       "@utils/*": ["utils/*"]
     },
     "incremental": true,
-    "strictNullChecks": false,
-    "strictBindCallApply": false,
-    "forceConsistentCasingInFileNames": false,
+    "strictNullChecks": true,
+    "strictBindCallApply": true,
+    "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": false,
     "esModuleInterop": true,
     "strict": true,
