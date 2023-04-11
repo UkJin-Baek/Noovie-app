@@ -1,20 +1,13 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import React, { useEffect, useState } from "react";
-import {
-  ActivityIndicator,
-  Dimensions,
-  FlatList,
-  RefreshControl,
-  Text,
-  View,
-} from "react-native";
+import React, { useEffect } from "react";
+import { ActivityIndicator, Dimensions } from "react-native";
 import styled from "styled-components/native";
 import Swiper from "react-native-swiper";
 import Slide from "@/components/Slide";
 import HMedia from "@/components/HMedia";
 import VMedia from "@/components/VMedia";
 import { moviesAPI } from "@/api";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 
 const Container = styled.FlatList``;
 
@@ -53,23 +46,34 @@ const HSeparator = styled.View`
 `;
 
 const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
-  const [refreshing, setRefreshing] = useState(false);
-  const { isLoading: nowPlayingLoading, data: nowPlayingData } = useQuery(
-    "nowPlaying",
-    moviesAPI.nowPlaying
-  );
-  const { isLoading: upcomingLoading, data: upcomingData } = useQuery(
-    "upcoming",
-    moviesAPI.upcoming
-  );
-  const { isLoading: trendingLoading, data: trendingData } = useQuery(
-    "trending",
-    moviesAPI.trending
-  );
+  const queryClient = useQueryClient();
 
+  const {
+    isLoading: nowPlayingLoading,
+    data: nowPlayingData,
+    isRefetching: isRefetchingNowPlaying,
+  } = useQuery(["movies", "nowPlaying"], moviesAPI.nowPlaying);
+  const {
+    isLoading: upcomingLoading,
+    data: upcomingData,
+    isRefetching: isRefetchingUpcoming,
+  } = useQuery(["movies", "upcoming"], moviesAPI.upcoming);
+  const {
+    isLoading: trendingLoading,
+    data: trendingData,
+    isRefetching: isRefetchingTrending,
+  } = useQuery(["movies", "trending"], moviesAPI.trending);
+
+  // useQuery API 호출로부터 받아온 Loading boolean 값
   const loading = nowPlayingLoading || upcomingLoading || trendingLoading;
 
-  const onRefresh = async () => {};
+  // useQuery API 호출로부터 받아온 isRefetching boolean 값
+  const refreshing =
+    isRefetchingNowPlaying || isRefetchingUpcoming || isRefetchingTrending;
+
+  const onRefresh = async () => {
+    queryClient.refetchQueries(["movies"]);
+  };
   const movieKeyExtractor = (item: any) => item.id;
 
   const renderVMedia = ({ item }: any) => (
