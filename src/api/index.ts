@@ -28,19 +28,32 @@ export interface MovieResponse extends BaseResponse {
   results: Movie[];
 }
 
-const trending = () =>
-  fetch(`${BASE_URL}/trending/movie/week?api_key=${API_KEY}`).then((response) =>
-    response.json()
-  );
+export const moviesAPI = {
+  trending: () =>
+    fetch(`${BASE_URL}/trending/movie/week?api_key=${API_KEY}`).then(
+      (response) => response.json()
+    ),
+  upcoming: () =>
+    fetch(
+      `${BASE_URL}/movie/upcoming?api_key=${API_KEY}&language=en-US&page=1`
+    ).then((response) => response.json()),
+  nowPlaying: () =>
+    fetch(
+      `${BASE_URL}/movie/now_playing?api_key=${API_KEY}&language=en-US&page=1`
+    ).then((response) => response.json()),
+};
 
-const upcoming = () =>
-  fetch(
-    `${BASE_URL}/movie/upcoming?api_key=${API_KEY}&language=en-US&page=1`
-  ).then((response) => response.json());
-
-const nowPlaying = () =>
-  fetch(
-    `${BASE_URL}/movie/now_playing?api_key=${API_KEY}&language=en-US&page=1`
-  ).then((response) => response.json());
-
-export const moviesAPI = { trending, upcoming, nowPlaying };
+export const tvApi = {
+  trending: () =>
+    fetch(`${BASE_URL}/trending/tv/week?api_key=${API_KEY}`).then((response) =>
+      response.json()
+    ),
+  airingToday: () =>
+    fetch(`${BASE_URL}/tv/airing_today?api_key=${API_KEY}`).then((response) =>
+      response.json()
+    ),
+  topRated: () =>
+    fetch(`${BASE_URL}/tv/top_rated?api_key=${API_KEY}`).then((response) =>
+      response.json()
+    ),
+};

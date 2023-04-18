@@ -6,8 +6,9 @@ import Swiper from "react-native-swiper";
 import Slide from "@/components/Slide";
 import HMedia from "@/components/HMedia";
 import VMedia from "@/components/VMedia";
-import { Movie, MovieResponse, moviesAPI } from "@/api";
+import { MovieResponse, moviesAPI } from "@/api";
 import { useQuery, useQueryClient } from "react-query";
+import Loader from "@/components/Loader";
 
 const Container = styled.FlatList``;
 
@@ -18,12 +19,6 @@ const ListTitle = styled.Text`
   font-size: 18px;
   font-weight: 600;
   margin-left: 30px;
-`;
-
-const Loader = styled.View`
-  flex: 1;
-  justify-content: center;
-  align-items: center;
 `;
 
 const TrendingScroll = styled.FlatList`
@@ -96,9 +91,7 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
   useEffect(() => {}, []);
 
   return loading ? (
-    <Loader>
-      <ActivityIndicator size={"large"} />
-    </Loader>
+    <Loader />
   ) : upcomingData ? (
     <Container
       onRefresh={onRefresh}
