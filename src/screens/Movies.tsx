@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useEffect } from "react";
-import { ActivityIndicator, Dimensions } from "react-native";
+import { Dimensions } from "react-native";
 import styled from "styled-components/native";
 import Swiper from "react-native-swiper";
 import Slide from "@/components/Slide";
@@ -9,6 +9,7 @@ import VMedia from "@/components/VMedia";
 import { MovieResponse, moviesAPI } from "@/api";
 import { useQuery, useQueryClient } from "react-query";
 import Loader from "@/components/Loader";
+import HList from "@/components/HList";
 
 const Container = styled.FlatList``;
 
@@ -21,12 +22,12 @@ const ListTitle = styled.Text`
   margin-left: 30px;
 `;
 
-const TrendingScroll = styled.FlatList`
-  margin-top: 20px;
-`;
-
 const ListContainer = styled.View`
   margin-bottom: 40px;
+`;
+
+const TrendingScroll = styled.FlatList`
+  margin-top: 20px;
 `;
 
 const ComingSoonTitle = styled(ListTitle)`
@@ -34,10 +35,10 @@ const ComingSoonTitle = styled(ListTitle)`
 `;
 
 const VSeparator = styled.View`
-  width: 20px;
+  height: 20px;
 `;
 const HSeparator = styled.View`
-  height: 20px;
+  width: 20px;
 `;
 
 const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
@@ -90,9 +91,11 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
 
   useEffect(() => {}, []);
 
-  return loading ? (
-    <Loader />
-  ) : upcomingData ? (
+  if (loading) {
+    return <Loader />;
+  }
+
+  return upcomingData ? (
     <Container
       onRefresh={onRefresh}
       refreshing={refreshing}
@@ -100,7 +103,7 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
       renderItem={renderHMedia}
       keyExtractor={movieKeyExtractor}
       showsHorizontalScrollIndicator={false}
-      ItemSeparatorComponent={HSeparator}
+      ItemSeparatorComponent={VSeparator}
       ListHeaderComponent={
         <>
           <Swiper
@@ -128,21 +131,7 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
             ))}
           </Swiper>
 
-          <ListContainer>
-            <ListTitle>Trending movies</ListTitle>
-            {trendingData ? (
-              <TrendingScroll
-                horizontal
-                keyExtractor={movieKeyExtractor}
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{ paddingHorizontal: 30 }}
-                ItemSeparatorComponent={VSeparator}
-                data={trendingData.results}
-                renderItem={renderVMedia}
-              />
-            ) : null}
-          </ListContainer>
-
+          <HList title="Trending Movies" data={trendingData?.results} />
           <ComingSoonTitle>Coming Soon</ComingSoonTitle>
         </>
       }

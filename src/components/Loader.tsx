@@ -6,7 +6,7 @@ const Wrapper = styled.View`
   justify-content: center;
   align-items: center;
 `;
-const Loader = () => {
+const Loader: React.FC = () => {
   return (
     <Wrapper>
       <ActivityIndicator size={"large"} />
