@@ -1,5 +1,7 @@
+import { moviesAPI } from "@/api";
 import React, { useState } from "react";
 import { View, Text } from "react-native";
+import { useQuery } from "react-query";
 import styled from "styled-components/native";
 
 const Container = styled.ScrollView``;
@@ -13,8 +15,24 @@ const SearchBar = styled.TextInput`
 
 const Search = () => {
   const [query, setQuery] = useState("");
+  const {
+    isLoading: isMoviesLoading,
+    data: moviesData,
+    refetch: searchMovies,
+  } = useQuery(["searchMovies", query], moviesAPI.search, { enabled: false });
+  const {
+    isLoading: isTvLoading,
+    data: tvData,
+    refetch: searchTv,
+  } = useQuery(["searchTv", query], moviesAPI.search, { enabled: false });
+
   const onChangeText = (text: string) => setQuery(text);
-  console.log(query);
+  const onSubmit = () => {
+    if (query === "") return;
+    searchMovies();
+    searchTv();
+  };
+
   return (
     <Container>
       <SearchBar
@@ -22,6 +40,7 @@ const Search = () => {
         placeholderTextColor={"grey"}
         returnKeyType="search"
         onChangeText={onChangeText}
+        onSubmitEditing={onSubmit}
       />
     </Container>
   );
