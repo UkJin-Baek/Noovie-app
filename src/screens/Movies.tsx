@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Dimensions } from "react-native";
 import styled from "styled-components/native";
 import Swiper from "react-native-swiper";
@@ -43,6 +43,7 @@ const HSeparator = styled.View`
 
 const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
   const queryClient = useQueryClient();
+  const [refreshing, setRefreshing] = useState(false);
 
   const {
     isLoading: nowPlayingLoading,
@@ -63,12 +64,10 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
   // useQuery API 호출로부터 받아온 Loading boolean 값
   const loading = nowPlayingLoading || upcomingLoading || trendingLoading;
 
-  // useQuery API 호출로부터 받아온 isRefetching boolean 값
-  const refreshing =
-    isRefetchingNowPlaying || isRefetchingUpcoming || isRefetchingTrending;
-
   const onRefresh = async () => {
-    queryClient.refetchQueries(["movies"]);
+    setRefreshing(true);
+    await queryClient.refetchQueries(["movies"]);
+    setRefreshing(false);
   };
   const movieKeyExtractor = (item: any) => item.id;
 
