@@ -6,7 +6,7 @@ import Swiper from "react-native-swiper";
 import Slide from "@/components/Slide";
 import HMedia from "@/components/HMedia";
 import VMedia from "@/components/VMedia";
-import { MovieResponse, moviesAPI } from "@/api";
+import { MovieResponse, moviesApi } from "@/api";
 import { useQuery, useQueryClient } from "react-query";
 import Loader from "@/components/Loader";
 import HList from "@/components/HList";
@@ -49,17 +49,17 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
     isLoading: nowPlayingLoading,
     data: nowPlayingData,
     isRefetching: isRefetchingNowPlaying,
-  } = useQuery<MovieResponse>(["movies", "nowPlaying"], moviesAPI.nowPlaying);
+  } = useQuery<MovieResponse>(["movies", "nowPlaying"], moviesApi.nowPlaying);
   const {
     isLoading: upcomingLoading,
     data: upcomingData,
     isRefetching: isRefetchingUpcoming,
-  } = useQuery<MovieResponse>(["movies", "upcoming"], moviesAPI.upcoming);
+  } = useQuery<MovieResponse>(["movies", "upcoming"], moviesApi.upcoming);
   const {
     isLoading: trendingLoading,
     data: trendingData,
     isRefetching: isRefetchingTrending,
-  } = useQuery<MovieResponse>(["movies", "trending"], moviesAPI.trending);
+  } = useQuery<MovieResponse>(["movies", "trending"], moviesApi.trending);
 
   // useQuery API 호출로부터 받아온 Loading boolean 값
   const loading = nowPlayingLoading || upcomingLoading || trendingLoading;
@@ -130,7 +130,9 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
             ))}
           </Swiper>
 
-          <HList title="Trending Movies" data={trendingData?.results} />
+          {trendingData && (
+            <HList title="Trending Movies" data={trendingData.results} />
+          )}
           <ComingSoonTitle>Coming Soon</ComingSoonTitle>
         </>
       }

@@ -1,4 +1,4 @@
-import { moviesAPI } from "@/api";
+import { moviesApi } from "@/api";
 import React, { useState } from "react";
 import { View, Text } from "react-native";
 import { useQuery } from "react-query";
@@ -19,12 +19,12 @@ const Search = () => {
     isLoading: isMoviesLoading,
     data: moviesData,
     refetch: searchMovies,
-  } = useQuery(["searchMovies", query], moviesAPI.search, { enabled: false });
+  } = useQuery(["searchMovies", query], moviesApi.search, { enabled: false });
   const {
     isLoading: isTvLoading,
     data: tvData,
     refetch: searchTv,
-  } = useQuery(["searchTv", query], moviesAPI.search, { enabled: false });
+  } = useQuery(["searchTv", query], moviesApi.search, { enabled: false });
 
   const onChangeText = (text: string) => setQuery(text);
   const onSubmit = () => {
