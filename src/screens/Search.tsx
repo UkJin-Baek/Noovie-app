@@ -1,6 +1,7 @@
 import { moviesApi } from "@/api";
+import HList from "@/components/HList";
+import Loader from "@/components/Loader";
 import React, { useState } from "react";
-import { View, Text } from "react-native";
 import { useQuery } from "react-query";
 import styled from "styled-components/native";
 
@@ -10,18 +11,19 @@ const SearchBar = styled.TextInput`
   padding: 10px 15px;
   border-radius: 15px;
   width: 90%;
-  margin: 20px auto;
+  margin: 10px auto;
+  margin-bottom: 20px;
 `;
 
 const Search = () => {
   const [query, setQuery] = useState("");
   const {
-    isLoading: isMoviesLoading,
+    isLoading: moviesLoading,
     data: moviesData,
     refetch: searchMovies,
   } = useQuery(["searchMovies", query], moviesApi.search, { enabled: false });
   const {
-    isLoading: isTvLoading,
+    isLoading: tvLoading,
     data: tvData,
     refetch: searchTv,
   } = useQuery(["searchTv", query], moviesApi.search, { enabled: false });
@@ -42,6 +44,9 @@ const Search = () => {
         onChangeText={onChangeText}
         onSubmitEditing={onSubmit}
       />
+      {moviesLoading || tvLoading ? <Loader /> : null}
+      {moviesData && <HList title="Movie Results" data={moviesData.results} />}
+      {tvData && <HList title="TV Results" data={tvData.results} />}
     </Container>
   );
 };

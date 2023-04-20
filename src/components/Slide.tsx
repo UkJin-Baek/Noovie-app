@@ -1,8 +1,9 @@
 import { makeImgPath } from "@/utils";
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, TouchableWithoutFeedback, View } from "react-native";
 import styled from "styled-components/native";
 import Poster from "./Poster";
+import { useNavigation } from "@react-navigation/native";
 
 const BgImg = styled.Image``;
 
@@ -48,22 +49,28 @@ const Slide: React.FC<SlideProps> = ({
   overview,
   voteAverage,
 }: SlideProps) => {
+  const navigation = useNavigation();
+  const goToDetail = () => {
+    navigation.navigate("Stacks", { screen: "Detail" });
+  };
   return (
-    <View style={{ flex: 1 }} key={id}>
-      <BgImg
-        source={{ uri: makeImgPath(backdropPath) || "" }}
-        style={StyleSheet.absoluteFill}
-        blurRadius={30}
-      />
-      <Wrapper>
-        <Poster path={posterPath} />
-        <Column>
-          <Title>{originalTitle}</Title>
-          <Overview>{overview.slice(0, 90)}...</Overview>
-          {voteAverage > 0 ? <Votes>⭐️{voteAverage}</Votes> : null}
-        </Column>
-      </Wrapper>
-    </View>
+    <TouchableWithoutFeedback onPress={goToDetail}>
+      <View style={{ flex: 1 }} key={id}>
+        <BgImg
+          source={{ uri: makeImgPath(backdropPath) || "" }}
+          style={StyleSheet.absoluteFill}
+          blurRadius={30}
+        />
+        <Wrapper>
+          <Poster path={posterPath} />
+          <Column>
+            <Title>{originalTitle}</Title>
+            <Overview>{overview.slice(0, 90)}...</Overview>
+            {voteAverage > 0 ? <Votes>⭐️{voteAverage}</Votes> : null}
+          </Column>
+        </Wrapper>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
